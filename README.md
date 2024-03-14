@@ -1,4 +1,4 @@
-# Starter with Vite, React Testing Library and Vitest
+# Starter code for Sundaes on Demand
 
 Created for the Udemy course [React Testing Library with Jest / Vitest](https://www.udemy.com/course/react-testing-library)
 
@@ -7,7 +7,7 @@ Created for the Udemy course [React Testing Library with Jest / Vitest](https://
 This project was created using this command:
 
 ```sh
-npm create vite@latest vite-starter -- --template react
+npm create vite@latest sundae-starter -- --template react
 ```
 
 and then following all of the steps below.
@@ -15,24 +15,61 @@ and then following all of the steps below.
 I also removed a few unnecessary files, and updated
 
 - App.jsx
+- index.css
 - this README file 😄
 
-## Installing Vitest and React Testing Library in a Vite project
-
-### Install dependencies
+## Install React Boostrap, Vitest, and React Testing Library
 
 ```sh
 npm install -D vitest @vitest/ui eslint-plugin-vitest
-npm install -D jsdom @testing-library/jest-dom @testing-library/react
+npm install -D jsdom @testing-library/jest-dom @testing-library/react eslint-plugin-jest-dom eslint-plugin-testing-library
+npm install bootstrap react-bootstrap
+```
+
+## Add Bootstrap
+
+Add this line to _src/main.jsx_:
+
+```js
+import "bootstrap/dist/css/bootstrap.min.css";
+```
+
+## Update port to 3000
+
+To match the expectation of the sundae server, and avoid CORS errors, add this to the property / value to the `defineConfig` argument in _vite.config.js_:
+
+```js
+  server: {
+    port: 3000,
+    // exit if port 3000 is in use (to avoid CORS errors; server expects port 3000)
+    strict: true,
+  },
+```
+
+## Add `start` script to package.json
+
+In order to match the legacy course videos (which were filmed with create-react-app), add this to the _package.json_ `scripts` array:
+
+```json
+    "start": "vite",
+```
+
+## Install future dependencies
+
+For folks using this as a starter for adding React code, run these installs:
+
+```sh
+npm install -D @testing-library/user-event msw
+npm install axios
 ```
 
 ## Add test script to package.json `test` object
 
 ```json
-  "test": "vitest --watch",
+  "test": "vitest --watch"
 ```
 
-## Add a setup file
+## Add a test setup file
 
 To make [jest-dom matchers](https://github.com/testing-library/jest-dom#custom-matchers) available in all test files:
 
@@ -43,15 +80,14 @@ To make [jest-dom matchers](https://github.com/testing-library/jest-dom#custom-m
 import "@testing-library/jest-dom";
 ```
 
-## Add Vitest plugin to ESLint
-
-This step avoids linting errors when using the `test` and `expect` Vitest globals without importing them first.
+## Add Vitest and Testing Library plugins to ESLint
 
 In _.eslintrc.cjs_:
 
-1. Add this to to the `extends` array:
+1. Add these to to the `extends` array:
 
 ```js
+   'plugin:testing-library/react',
    'plugin:vitest/recommended',
 ```
 
@@ -81,6 +117,22 @@ Add these to the `rules` object in _.eslintrc.cjs_:
     "react/prop-types": "off", // turn off props validation
 ```
 
+## Add Automatic ESLint and Prettier formatting on save
+
+1. Install [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extensions in VSCode if they're not already installed.
+1. Create _.vscode/settings.json_ file.
+1. Add these contents:
+
+```json
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
+```
+
 **Note**: if you're having issues getting ESLint to work properly with VSCode, please see [this troubleshooting guide](https://dev.to/bonnie/eslint-prettier-and-vscode-troubleshooting-ljh).
 
 ## Update vite configuration for tests
@@ -91,7 +143,7 @@ Update _vite.config.js_ based on the [Vitest Testing Library example](https://gi
   test: {
     globals: true,
     environment: "jsdom",
-    // this points to the setup file that we created earlier
+    // this points to the setup file created earlier
     setupFiles: "./src/setup.js",
     // you might want to disable the `css: true` line, since we don't have
     // tests that rely on CSS -- and parsing CSS is slow.
@@ -100,7 +152,7 @@ Update _vite.config.js_ based on the [Vitest Testing Library example](https://gi
   },
 ```
 
-## Command to run tests
+## Command to run tests in watch mode
 
 ```sh
 npm test
