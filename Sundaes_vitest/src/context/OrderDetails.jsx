@@ -34,7 +34,7 @@ export function OrderDetailsProvider(props) {
   }
 
   function resetOrder() {
-    setOptionCounts = { scoops: {}, toppings: {} };
+    setOptionCounts({ scoops: {}, toppings: {} });
   }
 
   // utility function to derive totals from optionCounts state value
@@ -45,7 +45,7 @@ export function OrderDetailsProvider(props) {
     // total the values in the array of counts for the number of items
     const totalCount = countsArrays.reduce((total, value) => total + value, 0);
 
-    // multiply the total number of imtes by the price for this item type
+    // multiply the total number of itmes by the price for this item type
     return totalCount * pricePerItem[optionType];
   }
 

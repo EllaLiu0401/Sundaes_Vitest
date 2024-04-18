@@ -1,10 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Options from "../Options";
+import { OrderDetailsProvider } from "../../../context/OrderDetails";
 
 test("update scoop subtotal when scoops change", async () => {
   const user = userEvent.setup();
-  render(<Options optionType="scoopes" />);
+  render(<Options optionType="scoops" />, { wrapper: OrderDetailsProvider });
 
   // make sure total starts out at $0.00
   const scoopsSubtotal = screen.getByText("Scoops total: $", { exact: false }); // exact: false: partial match
@@ -14,14 +15,14 @@ test("update scoop subtotal when scoops change", async () => {
     name: "Vanilla",
   }); // need to use await: not going to populate untill option get from server
 
-  await user.clear(); // clear the value of an input field https://testing-library.com/docs/user-event/utility
+  await user.clear(vanillaInput); // clear the value of an input field https://testing-library.com/docs/user-event/utility
   await user.type(vanillaInput, "1"); // type the new value
   expect(scoopsSubtotal).toHaveTextContent("2.00");
   // updata chocolate scoops to 2 and check subtotal
   const chocolateInput = await screen.findByRole("spinbutton", {
-    name: "Chocoloate",
+    name: "Chocolate",
   });
-  await user.clear();
+  await user.clear(chocolateInput);
   await user.type(chocolateInput, "2");
   expect(scoopsSubtotal).toHaveTextContent("6.00");
 });
