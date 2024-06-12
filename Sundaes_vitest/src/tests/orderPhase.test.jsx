@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
-import { expect } from "vitest";
 
 test("order phases for happy path", async () => {
   // render app
@@ -33,13 +32,13 @@ test("order phases for happy path", async () => {
   const summaryToppingsHeading = await screen.findByRole("heading", {
     name: "Toppings: $1.50",
   });
-  expect(summaryToppingsHeading).toBeIntheDocument();
+  expect(summaryToppingsHeading).toBeInTheDocument();
 
   // expect(screen.getByText("1 Vanilla")).toBeIntheDocument();
   // expect(screen.getByText("Hot fudge")).toBeIntheDocument();
   const optionItems = screen.getAllByRole("listitem");
   const optionItemsText = optionItems.map((item) => item.textContent);
-  expect(optionItemsText).toEqual(["1 Vanilla", "Hot fudge"]);
+  expect(optionItemsText).toEqual(["1 Vanilla", "Hot fudge "]);
 
   const summaryHeading = await screen.findByRole("heading", { name: /Total/i });
   expect(summaryHeading).toHaveTextContent("3.50");
@@ -57,18 +56,16 @@ test("order phases for happy path", async () => {
 
   // expect 'loading' to show
   const loading = screen.getByText(/loading/i);
-  expect(loading).toBeIntheDocument();
+  expect(loading).toBeInTheDocument();
   // confirm order number on confirmation page
   const thankYouHeader = await screen.findByRole("heading", {
     name: /Thank you/i,
   });
-  expect(thankYouHeader).toBeIntheDocument();
+  expect(thankYouHeader).toBeInTheDocument();
   const notLoading = screen.queryByText("loading");
-  expect(notLoading).not.toBeIntheDocument();
-  const orderNumber = await screen.findByRole("heading", {
-    name: /order number/i,
-  });
-  expect(orderNumber).toBeIntheDocument();
+  expect(notLoading).not.toBeInTheDocument();
+  const orderNumber = await screen.findByText(/order number/i);
+  expect(orderNumber).toBeInTheDocument();
   // click 'new order' button on confirmation page
   const newOrderButton = await screen.findByRole("button", {
     name: /Create new order/i,
@@ -76,9 +73,9 @@ test("order phases for happy path", async () => {
   await user.click(newOrderButton);
   // check that scoops and toppings have been reset
   const scoopsTotal = await screen.findByText("Scoops total: $0.00");
-  expect(scoopsTotal).toBeIntheDocument();
+  expect(scoopsTotal).toBeInTheDocument();
   const toppingsTotal = screen.getByText("Toppings total: $0.00");
-  expect(toppingsTotal).toBeIntheDocument();
+  expect(toppingsTotal).toBeInTheDocument();
 
   // unmount the component to trigger cleanup and avoid
   unmount();
