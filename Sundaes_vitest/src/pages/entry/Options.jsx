@@ -10,6 +10,7 @@ import { userOrderDetails } from "../../context/OrderDetails";
 
 export default function Options({ optionType }) {
   const [items, setItems] = useState([]);
+
   const [error, setError] = useState(false);
   const { totals } = userOrderDetails();
 
