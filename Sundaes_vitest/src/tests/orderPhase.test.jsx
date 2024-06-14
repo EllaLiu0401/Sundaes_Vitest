@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
+import { expect } from "vitest";
 
 test("order phases for happy path", async () => {
   // render app
@@ -80,3 +81,33 @@ test("order phases for happy path", async () => {
   // unmount the component to trigger cleanup and avoid
   unmount();
 });
+
+test("Toppings header is not on summary page if no toppings ordered", async () => {
+  // render app
+  const user = userEvent.setup();
+  const { unmount } = render(<App />);
+
+  // add ice cream scoops.
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  await user.clear(vanillaInput);
+  await user.type(vanillaInput, "1");
+
+  // find and click order button
+  const orderButton = await screen.findByRole("button", {
+    name: "Order Sundaes",
+  });
+  await user.click(orderButton);
+  // check summary information based on order
+  const summaryScoopsHeading = screen.getByRole("heading", {
+    name: /Scoops:/i,
+  });
+  expect(summaryScoopsHeading).toHaveTextContent("2.00");
+  const summaryToppingsHeading = screen.queryByRole("heading", {
+    name: /Toppings/i,
+  });
+  expect(summaryToppingsHeading).not.toBeInTheDocument();
+});
+
+test("Toppings header is not on summary page if toppings ordered, then removed", async () => {});
