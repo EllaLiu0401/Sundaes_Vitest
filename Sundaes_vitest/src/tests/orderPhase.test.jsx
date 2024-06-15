@@ -85,7 +85,7 @@ test("order phases for happy path", async () => {
 test("Toppings header is not on summary page if no toppings ordered", async () => {
   // render app
   const user = userEvent.setup();
-  const { unmount } = render(<App />);
+  render(<App />);
 
   // add ice cream scoops.
   const vanillaInput = await screen.findByRole("spinbutton", {
@@ -109,5 +109,3 @@ test("Toppings header is not on summary page if no toppings ordered", async () =
   });
   expect(summaryToppingsHeading).not.toBeInTheDocument();
 });
-
-test("Toppings header is not on summary page if toppings ordered, then removed", async () => {});
